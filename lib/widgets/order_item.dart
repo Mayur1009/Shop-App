@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -23,14 +24,12 @@ class _OrderItemState extends State<OrderItem> {
       child: Column(
         children: <Widget>[
           ListTile(
-            title: Text('\$${widget.order.amount.toStringAsFixed(2)}'),
+            title: Text('\$${widget.order.amount}'),
             subtitle: Text(
               DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime),
             ),
             trailing: IconButton(
-              icon: Icon(
-                _expanded ? Icons.expand_less : Icons.expand_more,
-              ),
+              icon: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
               onPressed: () {
                 setState(() {
                   _expanded = !_expanded;
@@ -40,30 +39,30 @@ class _OrderItemState extends State<OrderItem> {
           ),
           if (_expanded)
             Container(
-	            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               height: min(widget.order.products.length * 20.0 + 10, 100),
               child: ListView(
                 children: widget.order.products
                     .map(
-                      (product) => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-	                      children: <Widget>[
-                          Text(
-                            product.title,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      (prod) => Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                prod.title,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                '${prod.quantity}x \$${prod.price}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey,
+                                ),
+                              )
+                            ],
                           ),
-                          Text(
-                            '${product.quantity}x \$${product.price}',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
                     )
                     .toList(),
               ),
