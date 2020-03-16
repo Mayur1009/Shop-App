@@ -14,10 +14,6 @@ class Auth with ChangeNotifier {
     return token != null;
   }
 
-  String get userId {
-    return _userId;
-  }
-
   String get token {
     if (_expiryDate != null &&
         _expiryDate.isAfter(DateTime.now()) &&
@@ -27,10 +23,14 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  String get userId {
+    return _userId;
+  }
+
   Future<void> _authenticate(
-      String email, String password, String urlSeg) async {
+      String email, String password, String urlSegment) async {
     final url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:$urlSeg?key=AIzaSyCP17ukVf1pi-LP6yEsEXWfVix52uYdLcQ";
+        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/$urlSegment?key=AIzaSyC13spCwP_f_SalxEbkB-wjedoF8iYENlQ';
     try {
       final response = await http.post(
         url,
@@ -62,10 +62,17 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signup(String email, String password) async {
-    return _authenticate(email, password, 'signUp');
+    return _authenticate(email, password, 'signupNewUser');
   }
 
   Future<void> login(String email, String password) async {
-    return _authenticate(email, password, 'signInWithPassword');
+    return _authenticate(email, password, 'verifyPassword');
+  }
+
+  void logout() {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+    notifyListeners();
   }
 }

@@ -21,10 +21,14 @@ class ProductsOverviewScreen extends StatefulWidget {
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showOnlyFavorites = false;
   var _isInit = true;
-  var _isloading = false;
+  var _isLoading = false;
 
   @override
   void initState() {
+    // Provider.of<Products>(context).fetchAndSetProducts(); // WON'T WORK!
+    // Future.delayed(Duration.zero).then((_) {
+    //   Provider.of<Products>(context).fetchAndSetProducts();
+    // });
     super.initState();
   }
 
@@ -32,11 +36,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   void didChangeDependencies() {
     if (_isInit) {
       setState(() {
-        _isloading = true;
+        _isLoading = true;
       });
       Provider.of<Products>(context).fetchAndSetProducts().then((_) {
         setState(() {
-          _isloading = false;
+          _isLoading = false;
         });
       });
     }
@@ -64,21 +68,21 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               Icons.more_vert,
             ),
             itemBuilder: (_) => [
-              PopupMenuItem(
-                child: Text('Only Favorites'),
-                value: FilterOptions.Favorites,
-              ),
-              PopupMenuItem(
-                child: Text('Show All'),
-                value: FilterOptions.All,
-              ),
-            ],
+                  PopupMenuItem(
+                    child: Text('Only Favorites'),
+                    value: FilterOptions.Favorites,
+                  ),
+                  PopupMenuItem(
+                    child: Text('Show All'),
+                    value: FilterOptions.All,
+                  ),
+                ],
           ),
           Consumer<Cart>(
             builder: (_, cart, ch) => Badge(
-              child: ch,
-              value: cart.itemCount.toString(),
-            ),
+                  child: ch,
+                  value: cart.itemCount.toString(),
+                ),
             child: IconButton(
               icon: Icon(
                 Icons.shopping_cart,
@@ -91,7 +95,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: _isloading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )

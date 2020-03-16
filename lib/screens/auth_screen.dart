@@ -104,21 +104,21 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _showerrorDialog(String msg) {
+  void _showErrorDialog(String message) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('An error Occurred'),
-        content: Text(msg),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-            child: Text('Okay'),
-          )
-        ],
-      ),
+            title: Text('An Error Occurred!'),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              )
+            ],
+          ),
     );
   }
 
@@ -146,18 +146,23 @@ class _AuthCardState extends State<AuthCard> {
         );
       }
     } on HttpException catch (error) {
-      var errormsg = 'Authentication failed';
+      var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_EXISTS')) {
-        errormsg = 'This email already in use.';
+        errorMessage = 'This email address is already in use.';
       } else if (error.toString().contains('INVALID_EMAIL')) {
-        errormsg = 'This is not valid email address';
+        errorMessage = 'This is not a valid email address';
       } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errormsg = 'Passwork too weak';
+        errorMessage = 'This password is too weak.';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Could not find a user with that email.';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Invalid password.';
       }
-      _showerrorDialog(errormsg);
+      _showErrorDialog(errorMessage);
     } catch (error) {
-      const errorMsg = 'Could not authenticate....try later';
-      _showerrorDialog(errorMsg);
+      const errorMessage =
+          'Could not authenticate you. Please try again later.';
+      _showErrorDialog(errorMessage);
     }
 
     setState(() {

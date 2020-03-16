@@ -31,7 +31,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     'imageUrl': '',
   };
   var _isInit = true;
-  var _isloading = false;
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -90,7 +90,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
     _form.currentState.save();
     setState(() {
-      _isloading = true;
+      _isLoading = true;
     });
     if (_editedProduct.id != null) {
       await Provider.of<Products>(context, listen: false)
@@ -103,26 +103,31 @@ class _EditProductScreenState extends State<EditProductScreen> {
         await showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: Text(
-              'An error occurred!',
-            ),
-            content: Text('Something went wrong!'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-                child: Text('Okay'),
+                title: Text('An error occurred!'),
+                content: Text('Something went wrong.'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                  )
+                ],
               ),
-            ],
-          ),
         );
       }
+      // finally {
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      //   Navigator.of(context).pop();
+      // }
     }
     setState(() {
-      _isloading = false;
+      _isLoading = false;
     });
     Navigator.of(context).pop();
+    // Navigator.of(context).pop();
   }
 
   @override
@@ -137,7 +142,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           ),
         ],
       ),
-      body: _isloading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -270,6 +275,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               if (!value.startsWith('http') &&
                                   !value.startsWith('https')) {
                                 return 'Please enter a valid URL.';
+                              }
+                              if (!value.endsWith('.png') &&
+                                  !value.endsWith('.jpg') &&
+                                  !value.endsWith('.jpeg')) {
+                                return 'Please enter a valid image URL.';
                               }
                               return null;
                             },
